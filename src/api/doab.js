@@ -4,7 +4,7 @@
  * Client proxies via Vite (/api/doab) with direct URL fallback.
  */
 
-const DOAB_PROXY_BASE = 'https://down-search.vercel.app/api/doab/rest/search';
+const DOAB_PROXY_BASE = '/api/doab/rest/search';
 const DOAB_DIRECT_BASE = 'https://directory.doabooks.org/rest/search';
 const DOAB_DOMAIN = 'https://directory.doabooks.org';
 
