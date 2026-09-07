@@ -4,7 +4,7 @@
  * Client proxies via Vite (/api/doab) with direct URL fallback.
  */
 
-const DOAB_PROXY_BASE = '/api/doab/rest/search';
+const DOAB_PROXY_BASE = 'https://down-search.vercel.app/api/doab/rest/search';
 const DOAB_DIRECT_BASE = 'https://directory.doabooks.org/rest/search';
 const DOAB_DOMAIN = 'https://directory.doabooks.org';
 
@@ -75,9 +75,9 @@ export async function searchDOAB(query, options = {}) {
 
     // Look for thumbnail cover image
     let coverUrl = null;
-    const thumbBitstream = bitstreams.find(b => 
-      b.bundleName === 'THUMBNAIL' || 
-      b.mimeType === 'image/jpeg' || 
+    const thumbBitstream = bitstreams.find(b =>
+      b.bundleName === 'THUMBNAIL' ||
+      b.mimeType === 'image/jpeg' ||
       (b.name && b.name.toLowerCase().endsWith('.jpg'))
     );
     if (thumbBitstream && thumbBitstream.retrieveLink) {
