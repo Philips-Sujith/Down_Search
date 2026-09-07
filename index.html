@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instant Shelf — Legal Public Domain &amp; Verified Library Book Finder</title>
+  <meta name="description" content="Find instant one-click public domain book downloads and verified library borrow links. Zero piracy, zero clickbait, zero fake waiting timers.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Google Fonts: Newsreader (book serif), JetBrains Mono (catalog mono), Plus Jakarta Sans (clean UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <!-- Library Header with Oak & Brass Accent -->
+  <header class="library-header" role="banner">
+    <div class="header-inner container">
+      <div class="brand-group">
+        <div class="brand-crest" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="4" fill="#202621"/>
+            <path d="M7 6H11V26H7V6Z" fill="#d4af37"/>
+            <path d="M12 9H16V26H12V9Z" fill="#c49a45"/>
+            <path d="M17 5H21V26H17V5Z" fill="#2d6a4f"/>
+            <path d="M22 8H25.5C25.7761 8 26 8.22386 26 8.5V26H22V8Z" fill="#a0522d"/>
+            <line x1="5" y1="26" x2="27" y2="26" stroke="#e6c687" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Instant Shelf</h1>
+          <p class="brand-tagline">Legal Book &amp; Public Domain Card Catalog</p>
+        </div>
+      </div>
+
+      <nav class="header-meta-badges" aria-label="Catalog credentials">
+        <span class="manifesto-badge" title="We only link to public domain archives and authorized libraries">
+          <span class="badge-dot"></span> 100% Legal &amp; Non-Piracy
+        </span>
+        <span class="manifesto-badge manifesto-badge--highlight" title="No countdowns, no fake buttons, no ad walls">
+          <span class="badge-bolt">⚡</span> Zero Wait Timers
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content container" id="main-content">
+    <!-- Hero Search Zone styled like a Physical Card Catalog Drawer Pull -->
+    <section class="catalog-search-section" aria-labelledby="search-heading">
+      <div class="drawer-panel">
+        <div class="drawer-hardware">
+          <span class="hardware-rivet left"></span>
+          <div class="drawer-label-plate">
+            <span class="plate-title" id="search-heading">PUBLIC INDEX DRAWER • AUTHOR &amp; TITLE LOOKUP</span>
+          </div>
+          <span class="hardware-rivet right"></span>
+        </div>
+
+        <form id="search-form" class="search-form" role="search" aria-label="Book and study material search">
+          <div class="search-input-shell">
+            <label for="search-input" class="sr-only">Search for any book title, author, or study subject</label>
+            <div class="search-icon-box" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <input 
+              type="search" 
+              id="search-input" 
+              class="search-input" 
+              placeholder="Search by title, author, or subject (e.g. Pride and Prejudice, Shelley, Odyssey)..." 
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <button type="button" id="clear-search-btn" class="clear-input-btn hidden" aria-label="Clear search input">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <button type="submit" class="search-submit-btn" id="search-submit-btn">
+              <span>Search Catalog</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Quick Explore Prompts -->
+        <div class="quick-prompts-bar">
+          <span class="prompts-label">Example drawers:</span>
+          <div class="chips-list" id="quick-chips">
+            <button type="button" class="chip-btn" data-query="Frankenstein">Frankenstein</button>
+            <button type="button" class="chip-btn" data-query="Calculus">Calculus</button>
+            <button type="button" class="chip-btn" data-query="Pride and Prejudice">Pride &amp; Prejudice</button>
+            <button type="button" class="chip-btn" data-query="Physics">Physics</button>
+            <button type="button" class="chip-btn" data-query="Dracula">Dracula</button>
+            <button type="button" class="chip-btn" data-query="The Great Gatsby">The Great Gatsby</button>
+            <button type="button" class="chip-btn" data-query="Economics">Economics</button>
+          </div>
+        </div>
+
+        <!-- Recent Searches Bar (from LocalStorage) -->
+        <div id="recent-searches" class="recent-searches-wrapper"></div>
+      </div>
+    </section>
+
+    <!-- Active Search Banner -->
+    <div id="search-status-banner" class="search-status-banner" aria-live="polite"></div>
+
+    <!-- SECTION 1: INSTANT DOWNLOAD (GUTENBERG + INTERNET ARCHIVE + DOAB) -->
+    <section class="shelf-section instant-shelf-section" id="section-instant" aria-labelledby="instant-shelf-heading">
+      <div class="section-card-header">
+        <div class="section-badge-group">
+          <div class="stamp-pill stamp-pill--green">
+            <span class="stamp-pill-icon">✓</span>
+            <span>PUBLIC DOMAIN &amp; OPEN ACCESS ARCHIVES</span>
+          </div>
+          <span class="stamp-subnote">Gutenberg • Internet Archive Open Texts • DOAB Academic</span>
+        </div>
+
+        <div class="section-title-wrap">
+          <h2 class="section-title" id="instant-shelf-heading">Instant Download Editions</h2>
+          <p class="section-explanation">
+            Merges unrestricted public domain literature, non-CDL open archive texts, and peer-reviewed open access books/textbooks. 
+            Clicking any format button triggers a <strong>direct one-click download or reader</strong> — zero countdown timers, zero fake download buttons, zero piracy.
+          </p>
+        </div>
+
+        <!-- Filter & Sort Toolbar for Instant Shelf -->
+        <div class="shelf-toolbar">
+          <!-- Source Filters -->
+          <div class="source-filters-group" id="source-filters" role="group" aria-label="Filter by archive source">
+            <span class="toolbar-label">Source:</span>
+            <button type="button" class="source-btn active" data-source="all">All Sources</button>
+            <button type="button" class="source-btn" data-source="gutenberg">Project Gutenberg</button>
+            <button type="button" class="source-btn" data-source="archive">Internet Archive</button>
+            <button type="button" class="source-btn" data-source="doab">Open Access Books</button>
+          </div>
+
+          <!-- Format Filters -->
+          <div class="format-filters-group" id="format-filters" role="group" aria-label="Filter formats">
+            <span class="toolbar-label">Format:</span>
+            <button type="button" class="filter-btn active" data-format="all">All</button>
+            <button type="button" class="filter-btn" data-format="pdf">PDF</button>
+            <button type="button" class="filter-btn" data-format="epub">EPUB</button>
+            <button type="button" class="filter-btn" data-format="txt">Plain Text</button>
+            <button type="button" class="filter-btn" data-format="html">HTML</button>
+          </div>
+
+          <div class="sort-group">
+            <label for="instant-sort" class="toolbar-label">Sort by:</label>
+            <select id="instant-sort" class="sort-select">
+              <option value="popularity">Popularity (Most Downloaded)</option>
+              <option value="title">Title (A – Z)</option>
+              <option value="source">Source Archive</option>
+            </select>
+          </div>
+
+          <div class="count-display">
+            <span id="instant-count-badge" class="count-badge count-badge--loading">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instant Cards Container -->
+      <div id="instant-results" class="shelf-results-container" aria-live="polite"></div>
+    </section>
+
+    <!-- SECTION 2: LIBRARY CATALOG BORROW / PREVIEW (OPEN LIBRARY & INTERNET ARCHIVE) -->
+    <section class="shelf-section catalog-shelf-section" id="section-catalog" aria-labelledby="catalog-shelf-heading">
+      <div class="section-card-header section-card-header--catalog">
+        <div class="section-badge-group">
+          <div class="stamp-pill stamp-pill--indigo">
+            <span class="stamp-pill-icon">⚲</span>
+            <span>LENDING CATALOG &amp; ARCHIVES</span>
+          </div>
+          <span class="stamp-subnote">Open Library &amp; Internet Archive Records</span>
+        </div>
+
+        <div class="section-title-wrap">
+          <h2 class="section-title" id="catalog-shelf-heading">Library Catalog — Borrow &amp; Preview</h2>
+          <p class="section-explanation">
+            Verified library entries for works that are in modern copyright or cataloged across world libraries. 
+            Direct public domain duplicates are automatically filtered out so you don't waste time. 
+            Links lead straight to legitimate loan readers and edition catalog pages.
+          </p>
+        </div>
+
+        <div class="shelf-toolbar shelf-toolbar--catalog">
+          <div class="catalog-filters-info">
+            <span class="info-tag">Honest Labeling Policy: Borrowing copies requires standard library/Archive login.</span>
+            <span id="catalog-dedup-badge" class="dedup-pill hidden">0 duplicates omitted</span>
+          </div>
+
+          <div class="count-display">
+            <span id="catalog-count-badge" class="count-badge count-badge--loading">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalog Cards Container -->
+      <div id="catalog-results" class="shelf-results-container" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- Physical Library Footer -->
+  <footer class="library-footer" role="contentinfo">
+    <div class="footer-inner container">
+      <div class="footer-col">
+        <h4 class="footer-heading">Instant Shelf Manifesto</h4>
+        <p class="footer-text">
+          Built to combat predatory book download traps, malicious clickbait, and artificial countdown timers. 
+          We connect readers strictly with open, legal cultural institutions.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Data &amp; Protocol Partners</h4>
+        <ul class="footer-links">
+          <li>
+            <a href="https://www.gutenberg.org" target="_blank" rel="noopener noreferrer">
+              Project Gutenberg &amp; Gutendex
+            </a>
+            <span class="link-note">— Public domain direct mirrors</span>
+          </li>
+          <li>
+            <a href="https://openlibrary.org" target="_blank" rel="noopener noreferrer">
+              Open Library
+            </a>
+            <span class="link-note">— Open bibliographic catalog</span>
+          </li>
+          <li>
+            <a href="https://archive.org" target="_blank" rel="noopener noreferrer">
+              Internet Archive
+            </a>
+            <span class="link-note">— Millions of open non-CDL texts</span>
+          </li>
+          <li>
+            <a href="https://www.doabooks.org" target="_blank" rel="noopener noreferrer">
+              Directory of Open Access Books (DOAB)
+            </a>
+            <span class="link-note">— Peer-reviewed open access books &amp; textbooks</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">No Keys &amp; Client-Side</h4>
+        <p class="footer-text">
+          Operates 100% client-side with public CORS endpoints. No user tracking, no session cookies, no monetization.
+        </p>
+        <div class="footer-tag">Catalog System Version 1.0.0</div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
